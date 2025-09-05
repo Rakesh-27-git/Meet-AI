@@ -1,8 +1,19 @@
-export default function Home() {
-  return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2">
-      <h1 className="text-4xl font-bold">Welcome to the app!</h1>
-      <p className="text-lg">Please sign up or log in to continue.</p>
-    </div>
-  );
-}
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+
+import { auth } from "@/lib/auth";
+import HomeView from "@/modules/home/ui/views/home-view";
+
+const Page = async () => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    redirect("/sign-in");
+  }
+
+  return <HomeView />;
+};
+
+export default Page;
